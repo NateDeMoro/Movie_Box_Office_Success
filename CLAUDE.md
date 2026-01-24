@@ -3,11 +3,43 @@
 ## Quick Summary
 ML project predicting movie box office revenue using pre-release data (budget, cast, genre, timing, marketing). **Target**: R² > 0.70, MAE < $25M on 2,500+ movies (2010-2024).
 
-## Current Status
-- **Phase**: Data collection in progress
-- **Completed**: Environment setup, API config, TMDB data collection, Box Office Mojo scraping, initial data merging
-- **In Progress**: 01_data_collection.ipynb - refining merged dataset
-- **Next**: Data cleaning & EDA (notebook 02)
+## Documentation
+**Project notes and detailed planning are now managed in Obsidian.**
+- **Vault Location**: `/Users/ndemoro/Desktop/FOLDERS/Nate_Obsidian`
+- This CLAUDE.md file provides quick reference for core project info and AI assistant context
+- For detailed notes, plans, analysis, and documentation, refer to the Obsidian vault
+
+## PROJECT PROGRESS TRACKER
+
+**Last Updated**: 2026-01-23
+
+### Phase 1: Data Collection - COMPLETE
+- __Step 1.1: Project setup, API keys, initial functions__
+- __Step 1.2: TMDB data collection (5,100 movies)__
+- __Step 1.3: Box Office Mojo scraping and data merging__
+
+### Phase 2: Data Cleaning & Initial EDA - COMPLETE
+- __Step 2.1: Load, inspect, identify issues__
+- __Step 2.2: Complete cleaning, handle missing values (2,095 final movies)__
+- __Step 2.3: Create visualizations, document findings__
+
+**Key Findings from Phase 2**:
+- Budget is strongest pre-release predictor: r=0.74, R²=0.55
+- Identified invalid predictors: vote_count, vote_average, popularity (post-release data)
+- Dataset: 2,095 movies (2010-2024), 67.5% profitable
+- Top genres: Adventure ($386M), Family ($350M), Animation ($261M)
+- Best release months: June ($268M), July ($213M), May ($183M)
+
+### Phase 3: Deep EDA & Feature Engineering - IN PROGRESS
+- Step 3.1: Bivariate analysis, correlation analysis **[NEXT STEP]**
+- Step 3.2: Engineer Tier 1 features (cast/crew, temporal, competition)
+- Step 3.3: EDA on engineered features, finalize feature set
+
+### Phase 4-7: Not Started
+- Step 4: Preprocessing & Baseline Modeling
+- Step 5: Model Optimization & Comparison
+- Step 6: Evaluation and Interpretation
+- Step 7: Documentation & Polish
 
 ## Project Structure
 ```
@@ -58,6 +90,16 @@ Movie_Box_Office_Success/
 - **Director Historical Avg**: Mean box office of previous films (exclude current)
 - **Competition**: Count wide releases same weekend, weight by genre overlap
 
+### Invalid Predictors (DO NOT USE)
+**TMDB Metrics (Post-Release Data)**:
+- **vote_count**: Number of TMDB user ratings - accumulates AFTER release (older movies have more votes)
+- **vote_average**: Average TMDB rating - contaminated with post-release audience scores
+- **popularity**: TMDB popularity metric - includes post-release viewership/engagement
+
+**Why excluded**: These metrics were collected at scrape time (2024+) and include years of post-release data. Successful movies accumulate more votes over time. Using them would be data leakage - you cannot predict pre-release revenue using post-release audience metrics.
+
+**Note**: Budget has strongest pre-release correlation (r=0.74, R²=0.55) with revenue.
+
 ## Modeling
 
 ### Train/Test Split
@@ -69,10 +111,12 @@ Movie_Box_Office_Success/
 - May need log transformation if skewed
 
 ### Models
-1. **Linear Regression**: Baseline (expect R² ~0.60-0.70)
-2. **Random Forest**: Main model (expect R² ~0.75-0.80)
+1. **Linear Regression**: Baseline with budget only (R² ~0.55 observed in EDA)
+2. **Random Forest**: Main model (target R² > 0.70-0.75)
 3. **XGBoost**: Alternative if RF insufficient
 4. **Ridge**: Handle multicollinearity
+
+**Baseline established**: Budget alone achieves R²=0.55. Goal is to improve to R² > 0.70 by adding genre, timing, cast/crew features.
 
 ### Hyperparameters
 - **Method**: RandomizedSearchCV, 5-fold CV
@@ -153,10 +197,10 @@ Movie_Box_Office_Success/
 
 ## Workflow
 
-1. **Data Collection** 🔄
-   - TMDB API calls, Box Office Mojo scraping, YouTube trailer data
+1. **Data Collection** ✅
+   - TMDB API calls, Box Office Mojo scraping completed
 
-2. **Cleaning & EDA** ⬜
+2. **Cleaning & EDA** 🔄
    - Handle missing values, outliers, distributions, correlations
 
 3. **Feature Engineering** ⬜
@@ -203,3 +247,27 @@ Movie_Box_Office_Success/
 - Sentiment analysis integration?
 - International revenue prediction?
 - Classification model (flop vs hit)?
+
+---
+
+## Note on Documentation Strategy
+This project uses **Obsidian** for detailed notes, planning, and documentation. The Obsidian folder (`/Users/ndemoro/Desktop/FOLDERS/Nate_Obsidian/Movie_project_folder`) contains:
+- Detailed project plans and analysis
+- Meeting notes and decisions
+- Research and references
+- Iteration logs
+
+**Syncing to GitHub**: Key documentation files are copied to the `docs/` folder and committed to version control. To sync updates:
+```bash
+# Copy notes to docs folder
+cp /Users/ndemoro/Desktop/FOLDERS/Nate_Obsidian/Movie_project_folder/*.md docs/
+# OR use the sync script
+./sync_obsidian_notes.sh
+
+# Then commit
+git add docs/
+git commit -m "Update documentation"
+git push
+```
+
+This CLAUDE.md file serves as a condensed reference guide for AI assistants and quick project overview. For comprehensive documentation and planning materials, consult the Obsidian vault or the `docs/` folder.
