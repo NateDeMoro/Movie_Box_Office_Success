@@ -40,9 +40,9 @@ This is the most important pre-release metric available and significantly outper
 ### INVALID Predictors (Post-Release Data - DO NOT USE)
 | Variable     | Correlation | Why Invalid |
 | ------------ | ----------- | ----------- |
-| vote_count   | 0.72        | ❌ **TMDB user rating count** - accumulates AFTER release. Older movies have more votes (e.g., Inception 2010 has 38,539 votes vs recent 2024 movie with 75 votes). This is post-release audience engagement, not a pre-release predictor. |
-| vote_average | 0.23        | ❌ **TMDB average rating** - contaminated with post-release audience scores. Not reliable pre-release data. |
-| popularity   | 0.59        | ❌ **TMDB popularity metric** - includes post-release viewership and engagement data from years after release. |
+| vote_count   | 0.72        | INVALID: **TMDB user rating count** - accumulates AFTER release. Older movies have more votes (e.g., Inception 2010 has 38,539 votes vs recent 2024 movie with 75 votes). This is post-release audience engagement, not a pre-release predictor. |
+| vote_average | 0.23        | INVALID: **TMDB average rating** - contaminated with post-release audience scores. Not reliable pre-release data. |
+| popularity   | 0.59        | INVALID: **TMDB popularity metric** - includes post-release viewership and engagement data from years after release. |
 
 **Critical Finding**: These TMDB metrics (vote_count, vote_average, popularity) were collected in 2024+ and include cumulative post-release data. Using them would be **data leakage** - we cannot predict pre-release revenue using post-release audience metrics. Successful movies naturally accumulate more votes/popularity over time.
 
@@ -124,9 +124,9 @@ This is the most important pre-release metric available and significantly outper
 
 ## Critical Decisions for Feature Engineering
 
-### ~~Variables to Verify Timing~~ ✅ RESOLVED
-- ~~**popularity**~~: ❌ INVALID - Confirmed to include post-release data
-- ~~**vote_count & vote_average**~~: ❌ INVALID - Confirmed to be post-release audience metrics
+### ~~Variables to Verify Timing~~ RESOLVED
+- ~~**popularity**~~: INVALID: INVALID - Confirmed to include post-release data
+- ~~**vote_count & vote_average**~~: INVALID: INVALID - Confirmed to be post-release audience metrics
 
 **Decision**: Exclude all TMDB vote/popularity metrics from modeling. Focus on true pre-release predictors only.
 
@@ -141,7 +141,7 @@ This is the most important pre-release metric available and significantly outper
 
 ## Next Steps
 
-1. ~~**Verify timing** of vote_count, vote_average, and popularity metrics~~ ✅ COMPLETE - Confirmed invalid
+1. ~~**Verify timing** of vote_count, vote_average, and popularity metrics~~ COMPLETE - Confirmed invalid
 2. **Feature engineering**: Create Tier 1 features (temporal, genre, budget categories, cast/crew metrics)
 3. **Calculate star power**: Director and actor historical performance metrics (must exclude current film to avoid leakage)
 4. **Handle outliers**: Address extreme ROI values and potential data errors
