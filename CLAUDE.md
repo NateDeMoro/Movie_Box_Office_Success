@@ -34,9 +34,9 @@ ML project predicting movie box office revenue using pre-release data (budget, c
 - __Step 2.3: Create visualizations, document findings__
 
 **Key Findings from Phase 2**:
-- Budget is strongest pre-release predictor: r=0.74, R²=0.55
+- Budget is strongest pre-release predictor: r=0.73, R²=0.54
 - Identified invalid predictors: vote_count, vote_average, popularity (post-release data)
-- Dataset: 2,095 movies (2010-2024), 67.5% profitable
+- Dataset: 1,618 movies (2010-2024), 67.5% profitable
 - Top genres: Adventure ($386M), Family ($350M), Animation ($261M)
 - Best release months: June ($268M), July ($213M), May ($183M)
 
@@ -108,7 +108,7 @@ Movie_Box_Office_Success/
 
 **Why excluded**: These metrics were collected at scrape time (2024+) and include years of post-release data. Successful movies accumulate more votes over time. Using them would be data leakage - you cannot predict pre-release revenue using post-release audience metrics.
 
-**Note**: Budget has strongest pre-release correlation (r=0.74, R²=0.55) with revenue.
+**Note**: Budget has strongest pre-release correlation (r=0.73, R²=0.54) with revenue.
 
 ## Modeling
 
@@ -117,16 +117,16 @@ Movie_Box_Office_Success/
 - **Alternative**: Random 80/20 stratified by genre
 
 ### Target Variable
-- Total domestic box office gross (millions)
+- Total worldwide box office gross (millions)
 - May need log transformation if skewed
 
 ### Models
-1. **Linear Regression**: Baseline with budget only (R² ~0.55 observed in EDA)
+1. **Linear Regression**: Baseline with budget only (R² ~0.54 observed in EDA)
 2. **Random Forest**: Main model (target R² > 0.70-0.75)
 3. **XGBoost**: Alternative if RF insufficient
 4. **Ridge**: Handle multicollinearity
 
-**Baseline established**: Budget alone achieves R²=0.55. Goal is to improve to R² > 0.70 by adding genre, timing, cast/crew features.
+**Baseline established**: Budget alone achieves R²=0.54. Goal is to improve to R² > 0.70 by adding genre, timing, cast/crew features.
 
 ### Hyperparameters
 - **Method**: RandomizedSearchCV, 5-fold CV
@@ -170,7 +170,7 @@ Movie_Box_Office_Success/
 ## Technical Decisions
 
 ### Scope
-- ✅ Domestic box office only
+- ✅ Worldwide box office (domestic + international)
 - ✅ Nominal values (not inflation-adjusted)
 - ✅ 2010-2024 only
 - ✅ Wide releases only
