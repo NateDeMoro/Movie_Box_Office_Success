@@ -1,13 +1,23 @@
 # Movie Box Office Revenue Prediction
 
+**Author**: Nate DeMoro
+
 ## Quick Summary
 ML project predicting movie box office revenue using pre-release data (budget, cast, genre, timing, marketing). **Target**: R² > 0.70, MAE < $25M on 2,500+ movies (2010-2024).
 
 ## Documentation
 **Project notes and detailed planning are now managed in Obsidian.**
-- **Vault Location**: `/Users/ndemoro/Desktop/FOLDERS/Nate_Obsidian`
+- **Vault Location**: `/Users/ndemoro/Desktop/FOLDERS/Nate_Obsidian/Movie_project_folder`
 - This CLAUDE.md file provides quick reference for core project info and AI assistant context
 - For detailed notes, plans, analysis, and documentation, refer to the Obsidian vault
+
+**Documentation Workflow**:
+- **When completing major phases** (e.g., Phase 2 EDA, Phase 3 Feature Engineering, Phase 5 Model Optimization):
+  - Create a new Obsidian markdown file: `Movie Box Office - [Phase Name] Findings.md`
+  - Document key findings, insights, decisions, and next steps
+  - Example: `Movie Box Office - EDA Findings.md` was created after completing Phase 2
+  - Save to: `/Users/ndemoro/Desktop/FOLDERS/Nate_Obsidian/Movie_project_folder/`
+  - Sync to repo using `./sync_obsidian_notes.sh` and commit
 
 ## PROJECT PROGRESS TRACKER
 
