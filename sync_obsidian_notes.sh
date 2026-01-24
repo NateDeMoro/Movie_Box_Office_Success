@@ -8,12 +8,14 @@ echo "Syncing Obsidian notes to docs folder..."
 
 # Copy markdown files from Obsidian to docs
 cp "$OBSIDIAN_FOLDER/Movie Box Office - EDA Findings.md" "$DOCS_FOLDER/"
+cp "$OBSIDIAN_FOLDER/Movie Box Office - Feature Engineering Findings.md" "$DOCS_FOLDER/"
 cp "$OBSIDIAN_FOLDER/Movie Project Plan.md" "$DOCS_FOLDER/"
 
 echo "✅ Notes synced successfully!"
 echo ""
 echo "Files updated:"
 echo "  - Movie Box Office - EDA Findings.md"
+echo "  - Movie Box Office - Feature Engineering Findings.md"
 echo "  - Movie Project Plan.md"
 echo ""
 echo "To commit these changes:"
