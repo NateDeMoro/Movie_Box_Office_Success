@@ -40,13 +40,24 @@ ML project predicting movie box office revenue using pre-release data (budget, c
 - Top genres: Adventure ($386M), Family ($350M), Animation ($261M)
 - Best release months: June ($268M), July ($213M), May ($183M)
 
-### Phase 3: Deep EDA & Feature Engineering - IN PROGRESS
-- Step 3.1: Bivariate analysis, correlation analysis **[NEXT STEP]**
-- Step 3.2: Engineer Tier 1 features (cast/crew, temporal, competition)
-- Step 3.3: EDA on engineered features, finalize feature set
+### Phase 3: Deep EDA & Feature Engineering - COMPLETE
+- __Step 3.1: Bivariate analysis, correlation analysis__
+- __Step 3.2: Engineer Tier 1 features (cast/crew, temporal, competition)__
+- __Step 3.3: EDA on engineered features, finalize feature set__
 
-### Phase 4-7: Not Started
-- Step 4: Preprocessing & Baseline Modeling
+**Key Findings from Phase 3**:
+- Created 28 features: 9 original + 13 Tier 1 + 6 Tier 2
+- Top 3 features explain 77.5%: budget (49.6%), director_historical_avg (19.3%), lead_actor_historical_avg (8.5%)
+- Strict no-leakage approach: all historical averages exclude current movie
+- Final dataset: movies_features.csv (2,095 × 36 columns)
+- VIF analysis: acceptable multicollinearity (most features VIF < 5)
+
+### Phase 4: Preprocessing & Baseline Modeling - NEXT
+- Step 4.1: Train/test split (time-based: 2010-2021 train, 2022-2024 test) **[NEXT STEP]**
+- Step 4.2: Feature encoding and scaling
+- Step 4.3: Train baseline models (Linear Regression, Ridge)
+
+### Phase 5-7: Not Started
 - Step 5: Model Optimization & Comparison
 - Step 6: Evaluation and Interpretation
 - Step 7: Documentation & Polish
