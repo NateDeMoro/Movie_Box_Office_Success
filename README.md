@@ -205,7 +205,7 @@ jupyter notebook
 
 ## Author
 
-Nick Demoro
+Nate Demoro
 
 ## License
 
