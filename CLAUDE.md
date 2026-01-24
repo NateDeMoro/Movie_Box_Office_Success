@@ -34,9 +34,10 @@ ML project predicting movie box office revenue using pre-release data (budget, c
 - __Step 2.3: Create visualizations, document findings__
 
 **Key Findings from Phase 2**:
-- Budget is strongest pre-release predictor: r=0.73, R²=0.54
+- Budget is strongest pre-release predictor: r=0.74, R²=0.55 (on full dataset)
+- Target variable: revenue_worldwide (worldwide box office, not domestic)
 - Identified invalid predictors: vote_count, vote_average, popularity (post-release data)
-- Dataset: 1,618 movies (2010-2024), 67.5% profitable
+- Dataset: 2,095 movies (2010-2024), 67.5% profitable
 - Top genres: Adventure ($386M), Family ($350M), Animation ($261M)
 - Best release months: June ($268M), July ($213M), May ($183M)
 
@@ -52,13 +53,25 @@ ML project predicting movie box office revenue using pre-release data (budget, c
 - Final dataset: movies_features.csv (2,095 × 36 columns)
 - VIF analysis: acceptable multicollinearity (most features VIF < 5)
 
-### Phase 4: Preprocessing & Baseline Modeling - NEXT
-- Step 4.1: Train/test split (time-based: 2010-2021 train, 2022-2024 test) **[NEXT STEP]**
-- Step 4.2: Feature encoding and scaling
-- Step 4.3: Train baseline models (Linear Regression, Ridge)
+### Phase 4: Preprocessing & Baseline Modeling - COMPLETE
+- __Step 4.1: Time-based train/test split (2010-2021 train, 2022-2024 test)__
+- __Step 4.2: Categorical encoding, missing value handling, feature scaling__
+- __Step 4.3: Train baseline models (Budget-Only, Full Linear Regression)__
 
-### Phase 5-7: Not Started
-- Step 5: Model Optimization & Comparison
+**Key Findings from Phase 4**:
+- Budget-Only baseline: Test R²=0.40, MAE=$110M (predicting revenue_worldwide)
+- Full model (28 features): Test R²=0.51, MAE=$95M
+- Feature engineering gain: +10.7% R² (27% relative improvement), -$15M MAE
+- Time-based split (2010-2021 train, 2022-2024 test) more challenging than full dataset
+- Preprocessing pipeline saved: 4 models, 12 data files, 7 visualizations
+- Ready for Phase 5: Non-linear models to achieve R²>0.70 target
+
+### Phase 5: Model Optimization & Comparison - NEXT
+- Step 5.1: Train Random Forest with hyperparameter tuning **[NEXT STEP]**
+- Step 5.2: Train XGBoost with hyperparameter tuning
+- Step 5.3: Compare models, select best performer
+
+### Phase 6-7: Not Started
 - Step 6: Evaluation and Interpretation
 - Step 7: Documentation & Polish
 
@@ -119,25 +132,30 @@ Movie_Box_Office_Success/
 
 **Why excluded**: These metrics were collected at scrape time (2024+) and include years of post-release data. Successful movies accumulate more votes over time. Using them would be data leakage - you cannot predict pre-release revenue using post-release audience metrics.
 
-**Note**: Budget has strongest pre-release correlation (r=0.73, R²=0.54) with revenue.
+**Note**: Budget has strongest pre-release correlation with revenue_worldwide (r=0.74, R²=0.55 on full dataset).
 
 ## Modeling
 
 ### Train/Test Split
-- **Preferred**: Time-based (2010-2021 train, 2022-2024 test)
-- **Alternative**: Random 80/20 stratified by genre
+- **✅ Implemented**: Time-based (2010-2021 train, 2022-2024 test)
+- Train: 1,682 movies (80.3%) | Test: 413 movies (19.7%)
 
 ### Target Variable
-- Total worldwide box office gross (millions)
-- May need log transformation if skewed
+- **revenue_worldwide**: Total worldwide box office gross (USD)
+- Includes domestic + international revenue
+- May need log transformation if skewed (consider for Phase 5)
 
 ### Models
-1. **Linear Regression**: Baseline with budget only (R² ~0.54 observed in EDA)
-2. **Random Forest**: Main model (target R² > 0.70-0.75)
-3. **XGBoost**: Alternative if RF insufficient
+1. **Linear Regression**: ✅ Baseline complete (Budget: R²=0.40, Full: R²=0.51 on test)
+2. **Random Forest**: Main model (target R² > 0.70-0.75) **[NEXT]**
+3. **XGBoost**: Alternative for best performance
 4. **Ridge**: Handle multicollinearity
 
-**Baseline established**: Budget alone achieves R²=0.54. Goal is to improve to R² > 0.70 by adding genre, timing, cast/crew features.
+**Baselines established** (Phase 4, predicting revenue_worldwide):
+- Budget-only: Test R²=0.40, MAE=$110M (on 2022-2024 test set)
+- Full (28 features): Test R²=0.51, MAE=$95M
+- Note: Full dataset R²=0.55 (Phase 2), but time-based test is more realistic
+- Goal: R² > 0.70 with Random Forest/XGBoost (Phase 5)
 
 ### Hyperparameters
 - **Method**: RandomizedSearchCV, 5-fold CV
@@ -186,10 +204,12 @@ Movie_Box_Office_Success/
 - ✅ 2010-2024 only
 - ✅ Wide releases only
 
-### To Decide
-- Log-transform target?
-- Feature selection approach?
-- Missing data thresholds?
+### Decisions Made
+- ✅ Train/test split: Time-based (2010-2021 train, 2022-2024 test)
+- ✅ Categorical encoding: Ordinal (certification, budget/runtime category), Label (genre)
+- ✅ Missing values: us_certification→"Unknown", runtime_category→mode
+- ✅ Scaling: StandardScaler (mean=0, std=1) for linear models
+- 🔄 Log-transform target: Consider for Phase 5 (residuals show heteroscedasticity)
 
 ## Success Criteria
 
@@ -201,12 +221,12 @@ Movie_Box_Office_Success/
 
 ### Deliverables
 - ✅ Clean repo structure
-- ✅ 5 organized notebooks
+- ✅ 4 notebooks complete (01-04: collection → baseline modeling)
 - ✅ Comprehensive README
-- ⬜ 3+ visualizations
-- ⬜ Feature importance plot
-- ⬜ Actual vs predicted plot
-- ⬜ Model comparison table
+- ✅ 7+ visualizations (revenue dist, predictions, residuals, coefficients)
+- ✅ Feature importance analysis (coefficients + Phase 3 Random Forest)
+- ✅ Actual vs predicted plots (budget-only + full model)
+- ✅ Model comparison table (baseline_model_comparison.csv)
 
 ## Libraries
 
@@ -218,26 +238,13 @@ Movie_Box_Office_Success/
 
 ## Workflow
 
-1. **Data Collection** ✅
-   - TMDB API calls, Box Office Mojo scraping completed
-
-2. **Cleaning & EDA** 🔄
-   - Handle missing values, outliers, distributions, correlations
-
-3. **Feature Engineering** ⬜
-   - Create Tier 1-3 features, validate engineered features
-
-4. **Baseline Model** ⬜
-   - Train/test split, encoding, scaling, Linear Regression
-
-5. **Model Optimization** ⬜
-   - Random Forest + XGBoost tuning, feature importance
-
-6. **Evaluation** ⬜
-   - Error analysis, visualizations, insights
-
-7. **Documentation** ⬜
-   - Update README, clean code, test reproducibility
+1. **Data Collection** ✅ - TMDB API, Box Office Mojo scraping (2,095 movies)
+2. **Cleaning & EDA** ✅ - Missing values, distributions, correlations
+3. **Feature Engineering** ✅ - 28 features created, validated
+4. **Baseline Modeling** ✅ - Preprocessing pipeline, Linear Regression baselines
+5. **Model Optimization** 🔄 - Random Forest + XGBoost tuning **[IN PROGRESS]**
+6. **Evaluation** ⬜ - Error analysis, visualizations, insights
+7. **Documentation** ⬜ - Update README, clean code, test reproducibility
 
 ## Critical Notes
 
