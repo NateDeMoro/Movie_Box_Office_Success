@@ -66,14 +66,27 @@ ML project predicting movie box office revenue using pre-release data (budget, c
 - Preprocessing pipeline saved: 4 models, 12 data files, 7 visualizations
 - Ready for Phase 5: Non-linear models to achieve R²>0.70 target
 
-### Phase 5: Model Optimization & Comparison - NEXT
-- Step 5.1: Train Random Forest with hyperparameter tuning **[NEXT STEP]**
-- Step 5.2: Train XGBoost with hyperparameter tuning
-- Step 5.3: Compare models, select best performer
+### Phase 5: Model Optimization & Comparison - COMPLETE
+- __Step 5.1: Train Random Forest with hyperparameter tuning__
+- __Step 5.2: Train XGBoost with hyperparameter tuning__
+- __Step 5.3: Compare models, select best performer__
 
-### Phase 6-7: Not Started
-- Step 6: Evaluation and Interpretation
-- Step 7: Documentation & Polish
+**Key Findings from Phase 5**:
+- Random Forest (Tuned): Test R²=0.56, MAE=$89M (best generalization)
+- XGBoost (Tuned): Test R²=0.49, MAE=$85M (best MAE but lower R²)
+- Did NOT achieve target R²>0.70 - established R²≈0.56 as realistic ceiling
+- Overfitting observed: RF (train R²=0.95→test 0.56), XGB (train R²=0.98→test 0.49)
+- Top features: budget_category (21%), budget (18%), director_historical_avg (14%)
+- Best model: Random Forest (balances performance and generalization)
+- Environment: Fixed XGBoost import issue (installed libomp via Homebrew)
+
+### Phase 6: Evaluation and Interpretation - NEXT
+- Step 6.1: Error analysis and residual plots **[NEXT STEP]**
+- Step 6.2: Create final visualizations
+- Step 6.3: Document insights and recommendations
+
+### Phase 7: Documentation & Polish - Not Started
+- Step 7: Final documentation, README update, reproducibility check
 
 ## Project Structure
 ```
@@ -147,15 +160,17 @@ Movie_Box_Office_Success/
 
 ### Models
 1. **Linear Regression**: ✅ Baseline complete (Budget: R²=0.40, Full: R²=0.51 on test)
-2. **Random Forest**: Main model (target R² > 0.70-0.75) **[NEXT]**
-3. **XGBoost**: Alternative for best performance
-4. **Ridge**: Handle multicollinearity
+2. **Random Forest**: ✅ Tuned complete (Test R²=0.56, MAE=$89M) - Best performer
+3. **XGBoost**: ✅ Tuned complete (Test R²=0.49, MAE=$85M) - Overfitting issues
+4. **Ridge**: Not pursued (Linear Regression sufficient)
 
-**Baselines established** (Phase 4, predicting revenue_worldwide):
-- Budget-only: Test R²=0.40, MAE=$110M (on 2022-2024 test set)
-- Full (28 features): Test R²=0.51, MAE=$95M
-- Note: Full dataset R²=0.55 (Phase 2), but time-based test is more realistic
-- Goal: R² > 0.70 with Random Forest/XGBoost (Phase 5)
+**Model Performance Summary** (Phase 4-5, predicting revenue_worldwide):
+- Budget-only: Test R²=0.40, MAE=$110M
+- Full Linear (28 features): Test R²=0.51, MAE=$95M
+- Random Forest (Tuned): Test R²=0.56, MAE=$89M ⭐ **Best model**
+- XGBoost (Tuned): Test R²=0.49, MAE=$85M
+- **Target**: R²>0.70 not achieved - R²≈0.56 established as realistic ceiling
+- **Overfitting**: Tree models show significant train-test gaps (RF: 0.39, XGB: 0.50)
 
 ### Hyperparameters
 - **Method**: RandomizedSearchCV, 5-fold CV
@@ -209,24 +224,25 @@ Movie_Box_Office_Success/
 - ✅ Categorical encoding: Ordinal (certification, budget/runtime category), Label (genre)
 - ✅ Missing values: us_certification→"Unknown", runtime_category→mode
 - ✅ Scaling: StandardScaler (mean=0, std=1) for linear models
-- 🔄 Log-transform target: Consider for Phase 5 (residuals show heteroscedasticity)
+- ✅ Log-transform target: Not pursued in Phase 5 (models trained on original scale)
 
 ## Success Criteria
 
 ### Metrics
-- R² > 0.70 on test set
-- MAE < $25M
-- Collect 2,500+ movies
-- Identify top 5 predictive features
+- R² > 0.70 on test set ❌ (Achieved: 0.56)
+- MAE < $25M ❌ (Achieved: $89M)
+- Collect 2,500+ movies ❌ (Collected: 2,095)
+- Identify top 5 predictive features ✅ (budget, budget_category, director_avg, lead_actor_avg, num_a_list)
 
 ### Deliverables
 - ✅ Clean repo structure
-- ✅ 4 notebooks complete (01-04: collection → baseline modeling)
+- ✅ 5 notebooks complete (01-05: collection → model optimization)
 - ✅ Comprehensive README
 - ✅ 7+ visualizations (revenue dist, predictions, residuals, coefficients)
-- ✅ Feature importance analysis (coefficients + Phase 3 Random Forest)
+- ✅ Feature importance analysis (all models: Linear, RF, XGB)
 - ✅ Actual vs predicted plots (budget-only + full model)
-- ✅ Model comparison table (baseline_model_comparison.csv)
+- ✅ Model comparison tables (baseline + all models)
+- ✅ Saved models (6 .pkl files: baselines + RF + XGB + preprocessing)
 
 ## Libraries
 
@@ -242,8 +258,8 @@ Movie_Box_Office_Success/
 2. **Cleaning & EDA** ✅ - Missing values, distributions, correlations
 3. **Feature Engineering** ✅ - 28 features created, validated
 4. **Baseline Modeling** ✅ - Preprocessing pipeline, Linear Regression baselines
-5. **Model Optimization** 🔄 - Random Forest + XGBoost tuning **[IN PROGRESS]**
-6. **Evaluation** ⬜ - Error analysis, visualizations, insights
+5. **Model Optimization** ✅ - Random Forest + XGBoost tuning complete
+6. **Evaluation** 🔄 - Error analysis, visualizations, insights **[NEXT]**
 7. **Documentation** ⬜ - Update README, clean code, test reproducibility
 
 ## Critical Notes
