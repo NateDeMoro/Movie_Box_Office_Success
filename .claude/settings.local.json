@@ -1,0 +1,8 @@
+{
+  "bypassPermissions": true,
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)"
+    ]
+  }
+}
